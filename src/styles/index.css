@@ -1,0 +1,10 @@
+@import url('@styles/other.css');
+
+:root{
+    --main-bg-color: red
+}
+
+.root{ 
+    color: var(--main-bg-color)   
+}
+@console.error 编译 index.css
