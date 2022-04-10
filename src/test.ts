@@ -1,19 +1,15 @@
-import { A } from './types'
+import { A } from './types';
 declare const enum Num {
-    First = 0,
-    Second = 1
+  First = 0,
+  Second = 1,
 }
 
+export const a: A = {
+  name: 'joey',
+  // age: Num.First
+  age: 12,
+};
 
-export const a: A                                          = {
-    name:                                    "joey",
-    // age: Num.First
-    age: 12
-}
-
-const s = 'sfsf'
-
-
-
+const s = 'sfsf';
 
 // export { A }
