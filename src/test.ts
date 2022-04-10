@@ -7,7 +7,7 @@ declare const enum Num {
 export const a: A = {
   name: 'joey',
   // age: Num.First
-  age: 12,
+  age: Num.First,
 };
 
 const s = 'sfsf';
