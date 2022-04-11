@@ -6,8 +6,8 @@ import classes from '@styles/test.module.css';
 import { a } from './test.ts';
 import logo from './assets/logo.png';
 
-// import test from './test.ts?url'
-import test from './test.ts?raw';
+import test from './test.ts?url';
+// import test from './test.ts?raw';
 console.log('---', test);
 import { name } from '../package.json';
 console.log(name);

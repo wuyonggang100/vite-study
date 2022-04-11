@@ -8,7 +8,9 @@ export const a: A = {
   name: 'joey',
   age: 0,
 };
-
+const xx = import.meta.env;
 const s = 'sfsf';
+
+console.log('env----', import.meta.env);
 
 // export { A }

@@ -3,21 +3,32 @@
     "target": "ESNext",
     "module": "ESNext", /* Specify what module code is generated. */
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */
-    "moduleResolution": "node", /* Specify how TypeScript looks up a file from a given module specifier. */
-    // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
+    "moduleResolution": "node", // 通过 node 方式解析模块
+    // "baseUrl": "./",                                  
     // "paths": {},    
-    "jsx": "preserve",
-    "sourceMap": true,
-    "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
+    "jsx": "preserve", // ts 不编译 jsx 语法, 留给插件编译
+    "sourceMap": true, // 可以直接调试 ts 代码
+    "esModuleInterop": true, // 可以不用 import * as xxx from 'yyy', 而直接 import xxx from 'yyy'
     // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
     "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
-    "lib": [
+    "lib": [ // 支持的库
       "ESNext",
       "DOM"
     ],
-    "resolveJsonModule": true,
+    "types": [
+      "vite/client"
+    ],
+    "resolveJsonModule": true, // 是否可以直接 import json 文件
     /* Type Checking */
     "strict": true,
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true, // 
+    "isolatedModules": true
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.jsx",
+    "src/**/*.vue",
+  ]
 }

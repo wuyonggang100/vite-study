@@ -267,9 +267,81 @@ yarn add vue-tsc -D
 
   
 
-  
+- ### 环境变量
 
-- 
+  从 import.meta.env 可以获取默认四个变量；
+
+  ![image-20220410184417094](vite 学习笔记.assets/image-20220410184417094.png)
+
+​       其中 mode 变量在 build 以后会变成 字符串，构建后默认是 **production ** ，其他几个也会变成对应的值；
+
+​		![image-20220410191343142](vite 学习笔记.assets/image-20220410191343142.png)
+
+- .env 文件可以拿到自定义变量，需要加上前缀 **VITE_** , 如 VITE_TITLE , 只要环境对应上了，就能到 **import.meta.env**  上获取到 ；
+
+- 可以使用 **.env.development.local** 文件来对应本地开发 , 可以在其中加上开发时独有的变量；
+
+- 可以指定 环境变量
+
+  如下会对应上 .env.test 文件中的变量；
+
+  ```sh
+  "scripts":{
+  "dev": "vite --mode test"
+  }
+  
+  ```
+
+
+
+### 热更新 HMR
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- ### 关于 eslint 配置和 git hook
+
+  yarn add eslint-config-tandard eslint-plugin-import eslint-plugin-promise eslint-pugin-node  -D
+
+  ts 支持
+
+  @typescript-eslint/eslint-plugin@latest  @typescript-eslint/parser@latest eslint@latest 
+
+npm init @eslint/config  === eslint --init
+
+  Airbnb: https://github.com/airbnb/javascript
+  Standard: https://github.com/standard/standard
+
+Google: https://github.com/google/eslint-config-google
+
+ XO: https://github.com/xojs/eslint-config-xo
+
+ @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest  eslint@latest
+
+
+
+@typescript-eslint/eslint-plugin@latest eslint-config-airbnb-base@latest eslint@^7.32.0 || ^8.2.0 eslint-plugin-import@^2.25.2 @typescript-eslint/parser@latest
+
+
+
+
 
 
 
