@@ -1,0 +1,32 @@
+.my-toast {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.6);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .my-toast  .close-btn{
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 20px;
+      background-color: #666;
+      color: #fff;
+  }
+
+.my-toast img{
+    display: block;
+    width: 100px;
+    height: 100px;
+    background-color: #999;
+    margin-bottom: 20px;
+}
+.my-toast .text{
+    margin: 0 auto;
+    text-align: center;
+}

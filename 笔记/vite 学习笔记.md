@@ -20,6 +20,22 @@ vite 在开发中使用 esbuild ，打包构建时使用 rollup ；
 },
 ```
 
+#### 支持 react 项目
+
+需要安装 reactRefresh 插件
+
+```js
+import {defineConfig} from "vite"
+import reactRefresh from "@vitejs/plugin-react-refresh"
+export default defineConfig({
+    plugins:[reactRefresh()]
+})
+```
+
+
+
+
+
 #### 支持vue3 的 jsx
 
 需要 安装 @vitejs/plugin-vue-jsx 
@@ -36,8 +52,17 @@ yarn add  vue@2.6.1 -S
 ```js
 import {createVuePlugin} from "vite-plugin-vue2"
 export default {
-    plugins:[createVuePluginP()]
+    plugins:[createVuePlugin()]
 }
+```
+
+#### 支持 json 
+
+如下可以直接获取到 json 文件中的属性，也可以用解构赋值的方式来获取指定属性；
+
+```js
+import pkg from '../package.json';
+console.log('pkg-----', pkg);
 ```
 
 
@@ -294,23 +319,204 @@ yarn add vue-tsc -D
 
 
 
-### 热更新 HMR
+### 热更新 HMR 的实现 
+
+### 批量导入 glob import 
+
+如下，批量导入 glob 目录下所有文件，每次可以得到一个对象，以文件相对路径为 key， value 是一个异步函数。
+
+```js
+const modules = import.meta.glob('./glob/*')
+Object.entries(modules).forEach(([k,v])=>{
+    v().then((module)=>{
+       console.log(k, module.default) 
+    })
+})
+```
+
+还可以使用正则来过滤部分文件；
+
+```js
+const modules = import.meta.glob('./glob/*-[0-9].js')
+```
+
+可以使用 globEager 来直接使用 module， 而不需要使用异步函数；
+
+```js
+const modules = import.meta.globEager('./glob/*');
+Object.entries(modules).forEach(([k, module]) => {
+  console.log('k---', k);
+  console.log('modules---', module.default);
+});
+```
+
+以上的核心，使用的是第三方库 ， fast-glob 
+
+## 预编译
+
+1. vite 在第一次运行项目后，会在项目的 node_modules 目录下生成一个 .vite 目录，其中包含一些第三方库和一些 chunk 的缓存, 只要依赖没有发生变化，就不会改变； 
+
+![image-20220411113338890](vite 学习笔记.assets/image-20220411113338890.png)
+
+2. vite 会将一些第三方库的 comonjs 方式编译成 esm 方式；
+
+3. vite 将一些零散的包会打包到一起；不要随意将第三方库加入到 optimizeDeps 的exclude 中；
+
+   ```js
+   export default defineConfig({
+     plugins: [vue(), vueJsx()],
+     optimizeDeps: {
+       exclude: [], // 不要随意将一些库加入进来
+     },
+   });
+   ```
+
+### 将 vite 项目集成到后端模板引擎项目中
+
+- 非 node 服务中
+- node 服务中
 
 
 
+### vite 配置项
+
+build 时的配置和 rollup 类似；
+
+### vite 插件
+
+- 命名
+
+  - rollup=plugin-xxx 可以在rollup 和 vite 中通用的插件；
+  - vite-plugin-xxx 只在 vite 中使用；
+
+- hook 钩子 (兼容 rollup 的钩子)，
+
+  > 3， 4， 5 三个 钩子，每个模块都会兼容；6, 7 在服务关闭时会调用；
+
+  1. options 
+
+  2. buildStart  启动时调用一次
+
+  3. resolveId：找到文件地址，如果有一个插件已经找到了，其他文件插件的 resolveId 就不会执行； 
+
+  4. load
+
+  5. transform 
+
+  6. buildEnd
+
+  7. closeBundle 
+
+  8. config:  return 的对象会被合并到 vite 的 config 中；
+
+  9. configResolved: 所有插件都执行完毕后，最终得到的 config ，可以在此获取到，只能使用，不能修改；
+
+  10. configureServer: 拿到 server 实例， 然后可以进行中间件操作；跟 express 中间件写法一样，可以对 浏览器 url 路径进行拦截操作；
+
+      ```js
+      configureServer(server) {
+          const middWare = (req, res, next) => {
+              // 可以都浏览器地址栏进行拦截
+              if (req.url === '/test') {
+                  res.end('我是test');
+              } else {
+                  next();
+              }
+          };
+          server.middlewares.use(middWare);
+      },
+      ```
+
+      如果在中间件加上 函数包裹起来，就会在 vite 其他全部插件执行完毕后再执行，如果有同样的行为就不会生效。此时，它的优先级是最低的。
+
+      ```js
+      return ()=>{
+         server.middlewares.use(middWare);
+      }
+      ```
+
+  11. transformIndexHtml: 可以对入口 index.html 进行一些操作, 第一个参数就是 index.html 文件中的初始内容，不包含后续加载的内容；可以对 index,html 的内容进行修改；
+
+  12. handleHotUpdate: 热更新时的处理；在页面热更新后就会执行；参数是 context ；
+
+      可以在此用 ctx.server.ws 给客户端发送消息；
+
+- 插件执行时机：
+
+  顺序是按照代码顺序，执行时机有如下三种：
+
+  - pre
+  - nomal
+  - post
+
+-  
 
 
 
+# rollup 
 
+1. 命令行
 
+   命令行中使用的 rollup 是全局的， package.json 中是本项目的；
 
+```sh
+npm i rollup -g
 
+// 打包到固定文件 
+rollup -i index.js --file dist.js --format cjs  # 可以打包成 umd, es， iife 等方式
+// 批量打包到指定目录
+rollup -i index.js -i demo.js --dir dist --format cjs  
 
+// 指定配置文件打包
+rollup -c rollup.config.js 
 
+// 指定项目中的插件,需要先安装 @rollup/plugin-json
+./node_modules/.bin/rollup --config rollup.config.js --plugin json
+```
 
+2. 配置
 
+   - 一个对象
 
+   使用 rollup.config.js , 直接 export default 一个配置对象； 或者使用 rollup.config.cjs 直接 module.exports 一个对象；
 
+   ```js
+   export default {
+       input:'index.js',
+       plugins:[],
+       output:{
+           file:'dist.js',
+           format:'umd',
+           name:'Index' // umd 方式暴露的全局变量
+       }
+   }
+   ```
+
+   - 一个数组，里面可以是多个配置对象；
+   - 其中 output 也可以是一个数组，可以对同一个入口，作多个出口方式打包；
+
+3. 插件
+
+   按照先后顺序执行
+
+   1. @rollup/plugin-node-resolve 
+   2. @rollup/plugin-commonjs
+   3. rollup/plugin-terser  ： 对代码进行压缩
+
+4. 插件开发
+
+   - 插件的 hook 
+     - name
+     - buildStart
+     - resolveId
+     - renderChunk
+     - ransform
+
+   - 官方插件： alias, babel, replace ; 在官方 rollup/plugins 下；
+
+     commonjs 和 babel 两个插件一起使用时， commonjs 要在前面；
+
+   
 
 
 
