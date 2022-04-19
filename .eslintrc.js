@@ -4,6 +4,19 @@ module.exports = {
     es2021: true,
     node: true,
     browser: true,
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
   },
 
   //  eslint-config-prettier: 禁用所有和 Prettier 产生冲突的规则
