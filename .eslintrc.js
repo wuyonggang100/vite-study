@@ -10,20 +10,22 @@ module.exports = {
   //  eslint- plugin - prettier: 把 Prettier 应用到 Eslint，配合 rules "prettier/prettier": "error" 实现 Eslint 提醒。
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:vue/vue3-recommended',
+
     'plugin:@typescript-eslint/recommended',
     // 'prettier/@typescript-eslint', // 此配置已经合并进入 prettier 中了, 不需要此项
-    'plugin:vue/essential',
+    // 'plugin:vue/essential',
     // 'plugin:vue/vue3-essential',
 
     // '@vue/prettier',
     'plugin:prettier/recommended',
   ],
 
-  parser: '@typescript-eslint/parser',
+  parser: 'vue-eslint-parser',
   parserOptions: {
     ecmaVersion: 2021,
     sourceType: 'module',
+    parser: '@typescript-eslint/parser',
     ecmaFeatures: {
       jsx: true, // 允许解析JSX
     },
